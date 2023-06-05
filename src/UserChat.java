@@ -1,5 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 public class UserChat implements IUserChat
 {    
@@ -15,9 +18,13 @@ public class UserChat implements IUserChat
 
     }
 
-    public static void main (String args[]) {
+    public static void main (String args[]) throws Exception{
         String userName = JOptionPane.showInputDialog(null, "Digite seu nome de usuário");
         new UserChat(userName);
+        //LocateRegistry registry//localhost/Servidor
+        Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+        IServerChat server = (IServerChat) registry.lookup("Servidor");
+        System.out.println(server.getRooms());
     }
 
     public String getUsrName() {
