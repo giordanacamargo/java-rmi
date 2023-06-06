@@ -35,7 +35,6 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
     private JButton joinRoomButton = new JButton("Entrar na sala");
     private JButton createRoomButton = new JButton("Criar sala");
     private JButton leaveRoomButton = new JButton("Sair da sala");
-    PrintWriter out;
     private JList<String> roomJList;
 
     public UserChat(String usrName, ArrayList<String> roomList) throws Exception{
