@@ -31,10 +31,8 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
     private JPanel panelRooms;
     private JTextPane messageArea = new JTextPane();
     JTextField textField = new JTextField(50);
-    private JButton sendMessageButton = new JButton("Enviar mensagem");;
     private JButton joinRoomButton = new JButton("Entrar na sala");
     private JButton createRoomButton = new JButton("Criar sala");
-    private JButton leaveRoomButton = new JButton("Sair da sala");
     private JList<String> roomJList;
 
     public UserChat(String usrName, IServerChat server) throws Exception{
@@ -82,30 +80,6 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
                 this.roomList = this.server.getRooms();
                 updateAndShowPanelRooms();
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-
-        this.leaveRoomButton.addActionListener(ev -> {
-            try {
-                UserChat.this.currentRoom.leaveRoom(UserChat.this.usrName);
-                UserChat.this.currentRoom = null;
-                UserChat.this.frameChatRoom.setVisible(false);
-                UserChat.this.frameRooms.setVisible(true);
-                UserChat.this.messageArea.getStyledDocument().remove(0, UserChat.this.messageArea.getStyledDocument().getLength());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-
-        this.sendMessageButton.addActionListener(ev -> {
-            try {
-                if (this.currentRoom != null) {
-                    this.currentRoom.sendMsg(this.usrName, this.textField.getText());
-                }
-
-                UserChat.this.textField.setText("");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -213,8 +187,11 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
 
         JPanel painelBotoes = new JPanel();
         painelBotoes.setLayout(new FlowLayout(FlowLayout.CENTER));
-        painelBotoes.add(joinRoomButton);
+        this.joinRoomButton.setBackground(Color.GREEN);
+        this.createRoomButton.setBackground(Color.BLUE);
+        this.createRoomButton.setForeground(Color.white);
         painelBotoes.add(createRoomButton);
+        painelBotoes.add(joinRoomButton);
 
         // Adicionando o painel ao JFrame
         this.frameRooms.getContentPane().add(painelBotoes, BorderLayout.SOUTH);

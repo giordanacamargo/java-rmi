@@ -141,6 +141,8 @@ public class ServerChat extends UnicastRemoteObject implements IServerChat {
 
         JPanel painelBotoes = new JPanel();
         painelBotoes.setLayout(new FlowLayout(FlowLayout.CENTER));
+        this.closeRoomButton.setBackground(Color.RED);
+        this.createRoomButton.setBackground(Color.GREEN);
         painelBotoes.add(closeRoomButton);
         painelBotoes.add(createRoomButton);
 
