@@ -198,7 +198,7 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
         JScrollPane panelList = new JScrollPane(this.roomJList, 21, 30);
         this.panelRooms.add(roomJList);
         this.panelRooms.add(panelList, "North");
-        this.panelRooms.add(joinRoomButton, "South");
+        this.panelRooms.add(joinRoomButton, "East");
         this.panelRooms.add(createRoomButton, "West");
         this.frameRooms.setContentPane(this.panelRooms);
     }

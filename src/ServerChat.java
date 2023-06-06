@@ -139,7 +139,7 @@ public class ServerChat extends UnicastRemoteObject implements IServerChat {
         panel.add(roomJList);
         panel.add(panelList, "North");
 
-        panel.add(closeRoomButton, "South");
+        panel.add(closeRoomButton, "East");
         panel.add(createRoomButton, "West");
 
         this.frame.setContentPane(panel);
@@ -156,7 +156,7 @@ public class ServerChat extends UnicastRemoteObject implements IServerChat {
                     try {
                         Registry registry = LocateRegistry.getRegistry("localhost", 1099);
                         for (String room: roomList) {
-                            IRoomChat sala = (IRoomChat) registry.lookup(room); // Conecta na sala
+                            IRoomChat sala = (IRoomChat) registry.lookup(room);
                             sala.closeRoom();
                         }
                     } catch (Exception var3) {

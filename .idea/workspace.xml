@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fd4b3621-f4c5-401c-8f4b-97a925580704" name="Changes" comment="Adição de tela de mensagens e envio.">
+    <list default="true" id="fd4b3621-f4c5-401c-8f4b-97a925580704" name="Changes" comment="Adição de funções na RoomChat.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/RoomChat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RoomChat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ServerChat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ServerChat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UserChat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserChat.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +59,7 @@
       <option name="presentableId" value="Default" />
       <updated>1685999948880</updated>
       <workItem from="1685999950029" duration="19828000" />
-      <workItem from="1686058446541" duration="126000" />
+      <workItem from="1686058446541" duration="425000" />
     </task>
     <task id="LOCAL-00001" summary="Commit inicial.">
       <created>1686003639200</created>
@@ -94,7 +96,14 @@
       <option name="project" value="LOCAL" />
       <updated>1686021991598</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Adição de funções na RoomChat.">
+      <created>1686058619095</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1686058619095</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -107,6 +116,7 @@
     <MESSAGE value="Commit excluindo e adicionando salas com interface." />
     <MESSAGE value="Adição de tela de mensagens." />
     <MESSAGE value="Adição de tela de mensagens e envio." />
-    <option name="LAST_COMMIT_MESSAGE" value="Adição de tela de mensagens e envio." />
+    <MESSAGE value="Adição de funções na RoomChat." />
+    <option name="LAST_COMMIT_MESSAGE" value="Adição de funções na RoomChat." />
   </component>
 </project>
