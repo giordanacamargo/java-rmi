@@ -49,6 +49,7 @@ public class ServerChat extends UnicastRemoteObject implements IServerChat {
 
                     this.roomList.add(roomName);
                     System.out.println("A sala " + roomName + " foi criada com sucesso.");
+                    this.UpdateRooms();
 
                 } catch (MalformedURLException | RemoteException var3) {
                     var3.printStackTrace();
