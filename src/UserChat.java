@@ -97,6 +97,8 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
                     try {
                         UserChat.this.currentRoom.leaveRoom(UserChat.this.usrName);
                         UserChat.this.currentRoom = null;
+                        Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+                        registry.unbind(UserChat.this.usrName);
                         System.exit(0);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -122,9 +124,7 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
                     try {
                         UserChat.this.currentRoom.leaveRoom(UserChat.this.usrName);
                         UserChat.this.currentRoom = null;
-                        UserChat.this.frameChatRoom.setVisible(false);
-                        UserChat.this.frameRooms.setVisible(true);
-                        UserChat.this.messageArea.getStyledDocument().remove(0, UserChat.this.messageArea.getStyledDocument().getLength());
+                        updateAndShowPanelRooms();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -199,14 +199,11 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
 
     public void deliverMsg(String senderName, String msg) throws BadLocationException {
         appendToPane(senderName, msg, Color.magenta);
-        if (senderName == "Servidor" && msg == "Sala fechada pelo servidor.") {
+        if (senderName.equals("Servidor") && msg.equals("Sala fechada pelo servidor.")) {
             try {
-                //ajustar
                 UserChat.this.currentRoom.leaveRoom(UserChat.this.usrName);
                 UserChat.this.currentRoom = null;
-                UserChat.this.frameChatRoom.setVisible(false);
-                UserChat.this.frameRooms.setVisible(true);
-                UserChat.this.messageArea.getStyledDocument().remove(0, UserChat.this.messageArea.getStyledDocument().getLength());
+                UserChat.this.updateAndShowPanelRooms();
             } catch (Exception e) {
                 e.printStackTrace();
             }

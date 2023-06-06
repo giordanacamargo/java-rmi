@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fd4b3621-f4c5-401c-8f4b-97a925580704" name="Changes" comment="Melhorias de interface 3.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ServerChat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ServerChat.java" afterDir="false" />
+    <list default="true" id="fd4b3621-f4c5-401c-8f4b-97a925580704" name="Changes" comment="Melhorias de interface 4.">
       <change beforePath="$PROJECT_DIR$/src/UserChat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserChat.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -58,7 +56,7 @@
       <option name="presentableId" value="Default" />
       <updated>1685999948880</updated>
       <workItem from="1685999950029" duration="19828000" />
-      <workItem from="1686058446541" duration="5464000" />
+      <workItem from="1686058446541" duration="5555000" />
     </task>
     <task id="LOCAL-00001" summary="Commit inicial.">
       <created>1686003639200</created>
@@ -144,7 +142,14 @@
       <option name="project" value="LOCAL" />
       <updated>1686062881946</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Melhorias de interface 4.">
+      <created>1686063981718</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1686063981718</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -163,17 +168,7 @@
     <MESSAGE value="Melhorias em RoomChat." />
     <MESSAGE value="Melhorias em ServerChat." />
     <MESSAGE value="Melhorias de interface 3." />
-    <option name="LAST_COMMIT_MESSAGE" value="Melhorias de interface 3." />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/UserChat.java</url>
-          <line>201</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="Melhorias de interface 4." />
+    <option name="LAST_COMMIT_MESSAGE" value="Melhorias de interface 4." />
   </component>
 </project>
