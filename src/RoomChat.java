@@ -1,11 +1,11 @@
 import java.rmi.RemoteException;
-import java.util.ArrayList;
+import java.rmi.registry.Registry;
+import java.rmi.registry.LocateRegistry;
 import java.util.Map;
 import java.util.HashMap;
 
 public class RoomChat extends java.rmi.server.UnicastRemoteObject implements IRoomChat {
 
-    private ArrayList<String> Users;
     private Map<String, IUserChat> userList;
 
     private String roomName;
@@ -25,9 +25,17 @@ public class RoomChat extends java.rmi.server.UnicastRemoteObject implements IRo
     }
     public void leaveRoom(String usrName) {
         userList.remove(usrName);
+        System.out.println("\nUsuários: ");
+        System.out.println(userList);
     }
     public void closeRoom() {
-        return;
+        try{
+            this.sendMsg("Sala fechada pelo servidor.", "Servidor");
+            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+            registry.unbind(this.roomName);
+        }catch(Exception e){
+            System.out.println("Erro durante o fechamento da sala.");
+        }
     }
     public String getRoomName() {
         return roomName;
