@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUserChat {
     private String usrName;
-    private String msg;
     private ArrayList<String> roomList =  new ArrayList<>(); //Todas as salas do servidor
     private IRoomChat currentRoom = null; // Sala do usuário
     private IServerChat server = null;
@@ -30,7 +29,6 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
     private JFrame frameRooms;
     private JFrame frameChatRoom;
     private JPanel panelRooms;
-    private JPanel panelChatRoom;
     private JTextPane messageArea = new JTextPane();
     JTextField textField = new JTextField(50);
     private JButton sendMessageButton = new JButton("Enviar mensagem");;
@@ -87,13 +85,14 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
 
         this.leaveRoomButton.addActionListener(ev -> {
             try {
-                this.currentRoom.leaveRoom(this.usrName);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+                UserChat.this.currentRoom.leaveRoom(UserChat.this.usrName);
+                UserChat.this.currentRoom = null;
+                UserChat.this.frameChatRoom.setVisible(false);
+                UserChat.this.frameRooms.setVisible(true);
+                UserChat.this.messageArea.getStyledDocument().remove(0, UserChat.this.messageArea.getStyledDocument().getLength());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            this.currentRoom = null;
-            updateAndShowPanelRooms();
-            UserChat.this.frameRooms.setTitle("Olá, " + UserChat.this.usrName + "!");
         });
 
         this.sendMessageButton.addActionListener(ev -> {
@@ -111,7 +110,6 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
 
     public void createFrameRooms(){
         this.frameRooms = new JFrame("Olá, " + this.usrName);
-        this.frameRooms.setDefaultCloseOperation(3);
         this.frameRooms.setSize(600, 400);
         frameRooms.setLocationRelativeTo(null);
         this.frameRooms.addWindowListener(new WindowAdapter() {
@@ -120,13 +118,11 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
                         "Fechar a janela?", 0, 3) == 0 && UserChat.this.currentRoom != null) {
                     try {
                         UserChat.this.currentRoom.leaveRoom(UserChat.this.usrName);
+                        UserChat.this.currentRoom = null;
+                        System.exit(0);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
-                    UserChat.this.currentRoom = null;
-                    UserChat.this.frameRooms.setTitle("Usuário: " + UserChat.this.usrName);
-                    System.exit(0);
                 }
 
             }
@@ -135,22 +131,23 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
 
     public void createFrameChatRooms () throws Exception {
         this.frameChatRoom = new JFrame("Olá, " + this.usrName + "! Você está na sala " + this.currentRoom.getRoomName());
-        this.frameChatRoom.setDefaultCloseOperation(3);
+        this.frameChatRoom.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.frameChatRoom.setSize(800, 800);
         frameChatRoom.setLocationRelativeTo(null);
         this.frameChatRoom.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent ev) {
                 if (JOptionPane.showConfirmDialog(UserChat.this.frameChatRoom, "Tem certeza que deseja sair da sala?",
                         "Fechar a janela?", 0, 3) == 0 && UserChat.this.frameChatRoom != null) {
+
                     try {
                         UserChat.this.currentRoom.leaveRoom(UserChat.this.usrName);
+                        UserChat.this.currentRoom = null;
+                        UserChat.this.frameChatRoom.setVisible(false);
+                        UserChat.this.frameRooms.setVisible(true);
+                        UserChat.this.messageArea.getStyledDocument().remove(0, UserChat.this.messageArea.getStyledDocument().getLength());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
-                    UserChat.this.currentRoom = null;
-                    UserChat.this.frameChatRoom.setVisible(false);
-                    UserChat.this.frameRooms.setVisible(true);
                 }
 
             }
@@ -161,15 +158,21 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
         this.frameRooms.setVisible(false);
         this.frameChatRoom = null;
         createFrameChatRooms();
-        this.panelChatRoom = new JPanel(new BorderLayout());
-        this.messageArea.setPreferredSize(new Dimension(700, 700) );
-        this.panelChatRoom.add(textField, BorderLayout.SOUTH);
-        this.panelChatRoom.add(new JScrollPane(messageArea), BorderLayout.CENTER);
+        messageArea.setPreferredSize(new Dimension(700, 700) );
+        textField.setEditable(true);
+        messageArea.setEditable(false);
+        this.frameChatRoom.getContentPane().add(textField, BorderLayout.SOUTH);
+        this.frameChatRoom.getContentPane().add(new JScrollPane(messageArea), BorderLayout.CENTER);
+        this.frameChatRoom.pack();
 
         textField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                out.println(textField.getText());
-                textField.setText("");
+                try {
+                    UserChat.this.currentRoom.sendMsg(UserChat.this.usrName, UserChat.this.textField.getText());
+                    textField.setText("");
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 
@@ -234,7 +237,7 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
         AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c); //cor do nome
         aset = sc.addAttribute( aset, StyleConstants.FontFamily, "Lucida Console" );
         aset = sc.addAttribute( aset, StyleConstants.Bold, true);
-        messageArea.getStyledDocument().insertString(messageArea.getDocument().getLength(), name, aset);
+        messageArea.getStyledDocument().insertString(messageArea.getDocument().getLength(), name+ ": ", aset);
 
         StyleContext sc2 = StyleContext.getDefaultStyleContext();
         AttributeSet aset2 = sc2.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, Color.BLACK);

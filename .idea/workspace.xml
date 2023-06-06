@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fd4b3621-f4c5-401c-8f4b-97a925580704" name="Changes" comment="Commit excluindo e adicionando salas com interface.">
+    <list default="true" id="fd4b3621-f4c5-401c-8f4b-97a925580704" name="Changes" comment="Adição de tela de mensagens.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RoomChat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RoomChat.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UserChat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserChat.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -56,7 +57,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1685999948880</updated>
-      <workItem from="1685999950029" duration="17209000" />
+      <workItem from="1685999950029" duration="19601000" />
     </task>
     <task id="LOCAL-00001" summary="Commit inicial.">
       <created>1686003639200</created>
@@ -79,7 +80,14 @@
       <option name="project" value="LOCAL" />
       <updated>1686015964341</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Adição de tela de mensagens.">
+      <created>1686019432018</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1686019432018</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -90,6 +98,7 @@
     <MESSAGE value="Commit inicial." />
     <MESSAGE value="Commit implementando escolha de salas." />
     <MESSAGE value="Commit excluindo e adicionando salas com interface." />
-    <option name="LAST_COMMIT_MESSAGE" value="Commit excluindo e adicionando salas com interface." />
+    <MESSAGE value="Adição de tela de mensagens." />
+    <option name="LAST_COMMIT_MESSAGE" value="Adição de tela de mensagens." />
   </component>
 </project>

@@ -155,8 +155,7 @@ public class ServerChat extends UnicastRemoteObject implements IServerChat {
                 if (JOptionPane.showConfirmDialog(ServerChat.this.frame, "Tem certeza que deseja sair?", "Fechar a janela?", 0, 3) == 0) {
                     try {
                         Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-                        for(String room: roomList)
-                        {   
+                        for (String room: roomList) {
                             IRoomChat sala = (IRoomChat) registry.lookup(room); // Conecta na sala
                             sala.closeRoom();
                         }

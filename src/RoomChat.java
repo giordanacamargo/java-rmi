@@ -13,11 +13,9 @@ public class RoomChat extends java.rmi.server.UnicastRemoteObject implements IRo
         this.Users = new ArrayList<>();
     }
 
-    public void sendMsg(String usrName, String msg) throws Exception {
-        
+    public void sendMsg (String usrName, String msg) throws Exception {
         Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-        for(String userName: Users)
-        {
+        for (String userName: Users) {
             IUserChat user = (IUserChat) registry.lookup(userName);
             user.deliverMsg(usrName, msg);
         }
@@ -26,7 +24,7 @@ public class RoomChat extends java.rmi.server.UnicastRemoteObject implements IRo
         this.Users.add(usrName);
     }
     public void leaveRoom(String usrName) {
-        return;
+        this.Users.remove(usrName);
     }
     public void closeRoom() {
         return;
