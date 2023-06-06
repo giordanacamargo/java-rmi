@@ -1,5 +1,3 @@
-import com.sun.security.ntlm.Server;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -82,7 +80,7 @@ public class ServerChat extends UnicastRemoteObject implements IServerChat {
         } catch (Exception e) {
             System.out.println("Erro na criação do servidor. :C");
             System.out.println(e.getMessage());
-        }       
+        }
     }
 
     public void UpdateRooms() {
@@ -95,7 +93,7 @@ public class ServerChat extends UnicastRemoteObject implements IServerChat {
         this.frame.setVisible(true);
     }
 
-    public void createButtons(){        
+    public void createButtons(){
         this.closeRoomButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent var1) {
                 try {
@@ -105,11 +103,10 @@ public class ServerChat extends UnicastRemoteObject implements IServerChat {
 
                     Registry registry = LocateRegistry.getRegistry("localhost", 1099);
                     IRoomChat sala = (IRoomChat) registry.lookup(ServerChat.this.roomJList.getSelectedValue()); // Conecta na sala
-                    sala.sendMsg("Sala fechada pelo servidor.", "Servidor");                    
                     sala.closeRoom();
                     roomList.remove(ServerChat.this.roomJList.getSelectedValue());
 
-                    UpdateRooms();         
+                    UpdateRooms();
                 } catch (Exception var3) {
                     var3.printStackTrace();
                 }
@@ -159,7 +156,17 @@ public class ServerChat extends UnicastRemoteObject implements IServerChat {
             public void windowClosing(WindowEvent ev) {
                 int res = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja encerrar o programa?",  "Fechar", JOptionPane.YES_NO_OPTION);
                 if (res == JOptionPane.YES_OPTION) {
+                    try {
+                        Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+                        for (String room: roomList) {
+                            IRoomChat sala = (IRoomChat) registry.lookup(room);
+                            sala.closeRoom();
+                        }
+                    } catch (Exception var3) {
+                        var3.printStackTrace();
+                    }
                     ServerChat.this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    System.exit(0);
                 } else {
                     ServerChat.this.frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
                 }
