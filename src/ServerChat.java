@@ -57,10 +57,11 @@ public class ServerChat extends UnicastRemoteObject implements IServerChat {
             Naming.rebind("//localhost/Servidor", server);
 
             System.out.println("Servidor RMI pronto para receber chamadas...");
-            server.createRoom("VascoInicial");
-            server.createRoom("!VascoInicial");
+            server.createRoom("Sala_Inicial_1");
+            server.createRoom("Sala_Inicial_2");
+            server.createRoom("Sala_Inicial_3");
 
-            
+
         } catch (Exception e) {
             System.out.println("Erro na criação do servidor. :C");
             System.out.println(e.getMessage());

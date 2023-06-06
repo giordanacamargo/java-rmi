@@ -1,18 +1,29 @@
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.ArrayList;
 
 public class RoomChat extends java.rmi.server.UnicastRemoteObject implements IRoomChat {
 
+    private ArrayList<String> Users;
     private String roomName;
 
     public RoomChat(String roomName) throws RemoteException {
         this.roomName = roomName;
+        this.Users = new ArrayList<>();
     }
 
-    public void sendMsg(String usrName, String msg) {
-        return;
+    public void sendMsg(String usrName, String msg) throws Exception {
+        
+        Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+        for(String userName: Users)
+        {
+            IUserChat user = (IUserChat) registry.lookup(userName);
+            user.deliverMsg(usrName, msg);
+        }
     }
     public void joinRoom(String usrName, IUserChat user) {
-        return;
+        this.Users.add(usrName);
     }
     public void leaveRoom(String usrName) {
         return;
