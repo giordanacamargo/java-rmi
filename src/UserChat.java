@@ -48,6 +48,7 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
                 if (UserChat.this.currentRoom != null) {
                     UserChat.this.currentRoom.leaveRoom(UserChat.this.usrName);
                     UserChat.this.currentRoom = null;
+                    messageArea.getStyledDocument().remove(0, messageArea.getDocument().getLength());
                 }
 
                 if (UserChat.this.roomJList.getSelectedValue() == null) {
@@ -87,7 +88,7 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
     }
 
     public void createFrameRooms(){
-        this.frameRooms = new JFrame("Olá, " + this.usrName);
+        this.frameRooms = new JFrame("User - " + this.usrName);
         this.frameRooms.setSize(600, 400);
         frameRooms.setLocationRelativeTo(null);
         this.frameRooms.addWindowListener(new WindowAdapter() {
@@ -97,6 +98,7 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
                     try {
                         UserChat.this.currentRoom.leaveRoom(UserChat.this.usrName);
                         UserChat.this.currentRoom = null;
+                        messageArea.getStyledDocument().remove(0, messageArea.getDocument().getLength());
                         Registry registry = LocateRegistry.getRegistry("localhost", 1099);
                         registry.unbind(UserChat.this.usrName);
                         System.exit(0);
@@ -112,7 +114,7 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
     }
 
     public void createFrameChatRooms () throws Exception {
-        this.frameChatRoom = new JFrame("Olá, " + this.usrName + "! Você está na sala " + this.currentRoom.getRoomName());
+        this.frameChatRoom = new JFrame("Sala " + this.currentRoom.getRoomName() + " - " + this.usrName);
         this.frameChatRoom.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.frameChatRoom.setSize(800, 800);
         frameChatRoom.setLocationRelativeTo(null);
@@ -124,6 +126,7 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
                     try {
                         UserChat.this.currentRoom.leaveRoom(UserChat.this.usrName);
                         UserChat.this.currentRoom = null;
+                        messageArea.getStyledDocument().remove(0, messageArea.getDocument().getLength());
                         updateAndShowPanelRooms();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -132,22 +135,13 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
 
             }
         });
-    }
-
-    public void showPanelChatRoom () throws Exception {
-        this.frameRooms.setVisible(false);
-        this.frameChatRoom = null;
-        createFrameChatRooms();
-        messageArea.setPreferredSize(new Dimension(700, 700) );
-        textField.setEditable(true);
-        messageArea.setEditable(false);
-        this.frameChatRoom.getContentPane().add(textField, BorderLayout.SOUTH);
-        this.frameChatRoom.getContentPane().add(new JScrollPane(messageArea), BorderLayout.CENTER);
-        this.frameChatRoom.pack();
-
         textField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
+                    if(UserChat.this.textField.getText().equals(""))
+                    {
+                        return;
+                    }
                     UserChat.this.currentRoom.sendMsg(UserChat.this.usrName, UserChat.this.textField.getText());
                     textField.setText("");
                 } catch (Exception ex) {
@@ -155,6 +149,18 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
                 }
             }
         });
+    }
+
+    public void showPanelChatRoom () throws Exception {
+        this.frameRooms.setVisible(false);
+        this.frameChatRoom = null;
+        createFrameChatRooms();
+        messageArea.setPreferredSize(new Dimension(400, 400) );
+        textField.setEditable(true);
+        messageArea.setEditable(false);
+        this.frameChatRoom.getContentPane().add(textField, BorderLayout.SOUTH);
+        this.frameChatRoom.getContentPane().add(new JScrollPane(messageArea), BorderLayout.CENTER);
+        this.frameChatRoom.pack();
 
         this.frameChatRoom.setVisible(true);
     }
@@ -162,6 +168,10 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
     public void updateAndShowPanelRooms (){
         try {
             UpdateRoomList();
+            if (this.frameChatRoom != null) {
+                this.frameChatRoom.setVisible(false);
+            }
+            this.frameChatRoom = null;
             if (this.frameRooms != null) {
                 this.frameRooms.setVisible(false);
             }
@@ -203,7 +213,10 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
             try {
                 UserChat.this.currentRoom.leaveRoom(UserChat.this.usrName);
                 UserChat.this.currentRoom = null;
-                UserChat.this.updateAndShowPanelRooms();
+                messageArea.getStyledDocument().remove(0, messageArea.getDocument().getLength());
+                JOptionPane.showMessageDialog(null, "Sala foi fechada pelo Servidor.");
+                updateAndShowPanelRooms();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

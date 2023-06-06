@@ -49,8 +49,7 @@ public class ServerChat extends UnicastRemoteObject implements IServerChat {
 
                     this.roomList.add(roomName);
                     System.out.println("A sala " + roomName + " foi criada com sucesso.");
-                    this.UpdateRooms();
-
+                    UpdateRooms();
                 } catch (MalformedURLException | RemoteException var3) {
                     var3.printStackTrace();
                 }
@@ -75,7 +74,8 @@ public class ServerChat extends UnicastRemoteObject implements IServerChat {
             Naming.rebind("//localhost/Servidor", server);
 
             System.out.println("Servidor RMI pronto para receber chamadas...");
-            server.createRoom("Sala_Inicial_Padrão");
+            server.createRoom("Sala1");
+            server.createRoom("Sala2");
             server.UpdateRooms();
 
         } catch (Exception e) {
@@ -104,9 +104,8 @@ public class ServerChat extends UnicastRemoteObject implements IServerChat {
 
                     Registry registry = LocateRegistry.getRegistry("localhost", 1099);
                     IRoomChat sala = (IRoomChat) registry.lookup(ServerChat.this.roomJList.getSelectedValue()); // Conecta na sala
-                    sala.closeRoom();
                     roomList.remove(ServerChat.this.roomJList.getSelectedValue());
-
+                    sala.closeRoom();
                     UpdateRooms();
                 } catch (Exception var3) {
                     var3.printStackTrace();
