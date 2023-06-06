@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUserChat {
     private String usrName;
-    private ArrayList<String> roomList =  new ArrayList<>(); //Todas as salas do servidor
+    private ArrayList<String> roomList; //Todas as salas do servidor
     private IRoomChat currentRoom = null; // Sala do usuário
     private IServerChat server = null;
 
@@ -112,18 +112,13 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
         this.frameRooms.setSize(600, 400);
         frameRooms.setLocationRelativeTo(null);
         this.frameRooms.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent ev) {
-                if (JOptionPane.showConfirmDialog(UserChat.this.frameRooms, "Tem certeza que deseja fechar o programa?",
-                        "Fechar a janela?", 0, 3) == 0 && UserChat.this.currentRoom != null) {
-                    try {
-                        UserChat.this.currentRoom.leaveRoom(UserChat.this.usrName);
-                        UserChat.this.currentRoom = null;
-                        System.exit(0);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+            public void windowClosing (WindowEvent ev) {
+                int res = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja encerrar o programa?",  "Fechar", JOptionPane.YES_NO_OPTION);
+                if (res == JOptionPane.YES_OPTION) {
+                    UserChat.this.frameRooms.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                } else {
+                    UserChat.this.frameRooms.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
                 }
-
             }
         });
     }
@@ -133,7 +128,7 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
         this.frameChatRoom.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.frameChatRoom.setSize(800, 800);
         frameChatRoom.setLocationRelativeTo(null);
-        this.frameChatRoom.addWindowListener(new WindowAdapter() {
+        this.frameChatRoom.addWindowListener (new WindowAdapter() {
             public void windowClosing(WindowEvent ev) {
                 if (JOptionPane.showConfirmDialog(UserChat.this.frameChatRoom, "Tem certeza que deseja sair da sala?",
                         "Fechar a janela?", 0, 3) == 0 && UserChat.this.frameChatRoom != null) {
@@ -197,9 +192,15 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
         JScrollPane panelList = new JScrollPane(this.roomJList, 21, 30);
         this.panelRooms.add(roomJList);
         this.panelRooms.add(panelList, "North");
-        this.panelRooms.add(joinRoomButton, "East");
-        this.panelRooms.add(createRoomButton, "West");
         this.frameRooms.setContentPane(this.panelRooms);
+
+        JPanel painelBotoes = new JPanel();
+        painelBotoes.setLayout(new FlowLayout(FlowLayout.CENTER));
+        painelBotoes.add(joinRoomButton);
+        painelBotoes.add(createRoomButton);
+
+        // Adicionando o painel ao JFrame
+        this.frameRooms.getContentPane().add(painelBotoes, BorderLayout.SOUTH);
     }
 
     public void deliverMsg(String senderName, String msg) throws BadLocationException {
@@ -243,31 +244,5 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
         aset2 = sc2.addAttribute( aset2, StyleConstants.FontFamily, "Lucida Console" );
         aset2 = sc2.addAttribute( aset2, StyleConstants.Italic, true);
         messageArea.getStyledDocument().insertString(messageArea.getDocument().getLength(), msg + "\n", aset2);
-    }
-
-    public String getUsrName() 
-    {
-        return usrName;
-    }
-
-    public void setUsrName(String usrName) 
-    {
-        this.usrName = usrName;
-    }
-
-    public ArrayList<String> getRoomList() {
-        return roomList;
-    }
-
-    public void setRoomList(ArrayList<String> roomList) {
-        this.roomList = roomList;
-    }
-
-    public JList<String> getRoomJList() {
-        return roomJList;
-    }
-
-    public void setRoomJList(JList<String> roomJList) {
-        this.roomJList = roomJList;
     }
 }
