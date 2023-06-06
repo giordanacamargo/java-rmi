@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUserChat {
     private String usrName;
-    private ArrayList<String> roomList; //Todas as salas do servidor
+    private ArrayList<String> roomList =  new ArrayList<>(); //Todas as salas do servidor
     private IRoomChat currentRoom = null; // Sala do usuário
     private IServerChat server = null;
 
@@ -37,9 +37,9 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
     private JButton leaveRoomButton = new JButton("Sair da sala");
     private JList<String> roomJList;
 
-    public UserChat(String usrName, ArrayList<String> roomList) throws Exception{
+    public UserChat(String usrName, IServerChat server) throws Exception{
         this.usrName = usrName;
-        this.roomList = roomList;
+        this.server = server;
         createButtons();
         updateAndShowPanelRooms();
     }
@@ -56,11 +56,16 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
                     return;
                 }
 
-                Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-                IRoomChat sala = (IRoomChat) registry.lookup(UserChat.this.roomJList.getSelectedValue()); // Conecta na sala
-                UserChat.this.currentRoom = sala;
-                sala.joinRoom(UserChat.this.usrName, UserChat.this);
-                showPanelChatRoom();
+                try {
+                    Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+                    IRoomChat sala = (IRoomChat) registry.lookup(UserChat.this.roomJList.getSelectedValue()); // Conecta na sala
+                    UserChat.this.currentRoom = sala;
+                    sala.joinRoom(UserChat.this.usrName, UserChat.this);
+                    showPanelChatRoom();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Sala foi fechada pelo Servidor.");
+                    updateAndShowPanelRooms();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -115,6 +120,13 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
             public void windowClosing (WindowEvent ev) {
                 int res = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja encerrar o programa?",  "Fechar", JOptionPane.YES_NO_OPTION);
                 if (res == JOptionPane.YES_OPTION) {
+                    try {
+                        UserChat.this.currentRoom.leaveRoom(UserChat.this.usrName);
+                        UserChat.this.currentRoom = null;
+                        System.exit(0);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     UserChat.this.frameRooms.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 } else {
                     UserChat.this.frameRooms.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -128,7 +140,7 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
         this.frameChatRoom.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.frameChatRoom.setSize(800, 800);
         frameChatRoom.setLocationRelativeTo(null);
-        this.frameChatRoom.addWindowListener (new WindowAdapter() {
+        this.frameChatRoom.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent ev) {
                 if (JOptionPane.showConfirmDialog(UserChat.this.frameChatRoom, "Tem certeza que deseja sair da sala?",
                         "Fechar a janela?", 0, 3) == 0 && UserChat.this.frameChatRoom != null) {
@@ -173,14 +185,19 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
         this.frameChatRoom.setVisible(true);
     }
 
-    public void updateAndShowPanelRooms () {
-        if (this.frameRooms != null) {
-            this.frameRooms.setVisible(false);
+    public void updateAndShowPanelRooms (){
+        try {
+            UpdateRoomList();
+            if (this.frameRooms != null) {
+                this.frameRooms.setVisible(false);
+            }
+            this.frameRooms = null;
+            createFrameRooms();
+            createPanelRooms();
+            this.frameRooms.setVisible(true);
+        } catch (Exception e) {
+            System.out.println("Problema na hora de atualizar o painel de salas.");
         }
-        this.frameRooms = null;
-        createFrameRooms();
-        createPanelRooms();
-        this.frameRooms.setVisible(true);
     }
 
     public void createPanelRooms () {
@@ -205,6 +222,18 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
 
     public void deliverMsg(String senderName, String msg) throws BadLocationException {
         appendToPane(senderName, msg, Color.magenta);
+        if (senderName == "Servidor" && msg == "Sala fechada pelo servidor.") {
+            try {
+                //ajustar
+                UserChat.this.currentRoom.leaveRoom(UserChat.this.usrName);
+                UserChat.this.currentRoom = null;
+                UserChat.this.frameChatRoom.setVisible(false);
+                UserChat.this.frameRooms.setVisible(true);
+                UserChat.this.messageArea.getStyledDocument().remove(0, UserChat.this.messageArea.getStyledDocument().getLength());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void ConnectServer() throws Exception {
@@ -223,11 +252,12 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
         }
 
 
-        UserChat client = new UserChat(userName, server.getRooms());   
+        UserChat client = new UserChat(userName, server);
         // Vincular o objeto remoto a um nome no Registro RMI
         Naming.rebind(userName, client);
-        
+
         //Faz os trâmites de se conectar ao servidor e a sala
+        client.UpdateRoomList();
         client.ConnectServer();
     }
 
@@ -244,5 +274,13 @@ public class UserChat extends java.rmi.server.UnicastRemoteObject implements IUs
         aset2 = sc2.addAttribute( aset2, StyleConstants.FontFamily, "Lucida Console" );
         aset2 = sc2.addAttribute( aset2, StyleConstants.Italic, true);
         messageArea.getStyledDocument().insertString(messageArea.getDocument().getLength(), msg + "\n", aset2);
+    }
+
+    public void UpdateRoomList() {
+        try {
+            this.roomList = server.getRooms();
+        } catch (Exception e) {
+            System.out.println("Erro na atualização das salas.");
+        }
     }
 }

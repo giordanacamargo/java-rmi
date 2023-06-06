@@ -30,7 +30,7 @@ public class RoomChat extends java.rmi.server.UnicastRemoteObject implements IRo
     }
     public void closeRoom() {
         try{
-            this.sendMsg("Sala fechada pelo servidor.", "Servidor");
+            this.sendMsg("Servidor", "Sala fechada pelo servidor.");
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
             registry.unbind(this.roomName);
         }catch(Exception e){
